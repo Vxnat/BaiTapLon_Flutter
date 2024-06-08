@@ -39,9 +39,6 @@ class ProviderFood extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Xác nhận Mã giảm giá
-  void applyCoupon(String newCoupon) async {}
-
   // Cập nhật trạng thái sản phẩm yêu thích
   void updateFavoriteProduct(Product product) {
     APIs.updateFavoriteProduct(product);

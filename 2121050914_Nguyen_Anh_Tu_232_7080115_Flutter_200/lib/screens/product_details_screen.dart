@@ -90,6 +90,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   child: AddToCartIcon(
                     badgeOptions: const BadgeOptions(active: false),
                     key: cartKey,
+                    // Carts
                     icon: StreamBuilder(
                       stream: APIs.getAllSeftCarts(),
                       builder: (context, snapshot) {
@@ -145,6 +146,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   ),
                 ),
               ]),
+              // Favorite
               StreamBuilder(
                 stream: APIs.getFavorite(widget.item.id),
                 builder: (context, snapshot) {

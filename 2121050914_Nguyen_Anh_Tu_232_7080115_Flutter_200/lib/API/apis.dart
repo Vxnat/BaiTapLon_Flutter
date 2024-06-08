@@ -103,26 +103,21 @@ class APIs {
 
   // Cập nhật sản phẩm yêu thích của người dùng
   static Future<void> updateFavoriteProduct(Product product) async {
-    QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirebaseFirestore
-        .instance
-        .collection('favorites/${user.uid}/product')
-        .where('id', isEqualTo: product.id)
-        .get();
-    if (querySnapshot.docs.isEmpty) {
-      final ref = FirebaseFirestore.instance
+    try {
+      final favoriteRef = FirebaseFirestore.instance
           .collection('favorites/${user.uid}/product');
-      await ref.doc().set(product.toJson());
-    } else {
-      // ignore: avoid_function_literals_in_foreach_calls
-      querySnapshot.docs.forEach((doc) async {
-        // Lấy reference đến document cần xóa
-        DocumentReference docRef = FirebaseFirestore.instance
-            .collection('favorites/${user.uid}/product')
-            .doc(doc.id);
-
-        // Thực hiện xóa document
-        await docRef.delete();
-      });
+      QuerySnapshot<Map<String, dynamic>> querySnapshot =
+          await favoriteRef.where('id', isEqualTo: product.id).limit(1).get();
+      // Neu Product chua ton tai thi them moi
+      if (querySnapshot.docs.isEmpty) {
+        await favoriteRef.doc().set(product.toJson());
+      } else {
+        // Neu Product ton tai thi xoa khoi list
+        QueryDocumentSnapshot doc = querySnapshot.docs.first;
+        await favoriteRef.doc(doc.id).delete();
+      }
+    } catch (e) {
+      rethrow;
     }
   }
 
@@ -263,14 +258,16 @@ class APIs {
     final ordeRef = firestore.collection('orders/${user.uid}/products');
     final cartRef = firestore.collection('carts/${user.uid}/products');
     OrderProducts orderProducts;
-    final List<Cart> listCarts = [];
+    List<Cart> listCarts = [];
     QuerySnapshot<Map<String, dynamic>> cartQuerySnapshot = await cartRef.get();
+    // Neu Carts khong rong , lay cac item trong cart them vao 1 listCart
     if (cartQuerySnapshot.docs.isNotEmpty) {
       for (var i in cartQuerySnapshot.docs) {
         Cart cartItem = Cart.fromDocument(i);
         listCarts.add(cartItem);
       }
     }
+    // Them listCart vao orderHistory
     orderProducts = OrderProducts(
         id: id, date: date, listCarts: listCarts, totalPrice: totalPrice);
     await ordeRef.doc().set(orderProducts.toJson());

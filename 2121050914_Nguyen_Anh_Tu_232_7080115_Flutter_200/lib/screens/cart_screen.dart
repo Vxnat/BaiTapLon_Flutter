@@ -318,7 +318,7 @@ class _CartScreenState extends State<CartScreen> {
                                                               TextAlign.center,
                                                           controller:
                                                               controller,
-                                                          onSubmitted:
+                                                          onChanged:
                                                               (newValue) {
                                                             if (controller!
                                                                         .text !=
