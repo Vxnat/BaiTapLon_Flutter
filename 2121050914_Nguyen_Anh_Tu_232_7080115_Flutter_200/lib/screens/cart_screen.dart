@@ -13,7 +13,6 @@ class CartScreen extends StatefulWidget {
 }
 
 class _CartScreenState extends State<CartScreen> {
-  late TextEditingController couponController;
   final foodModel = ProviderFood();
   final Map<String, TextEditingController> textEditingControllerMap = {};
   late int currentQuantityCart;
@@ -36,7 +35,6 @@ class _CartScreenState extends State<CartScreen> {
   @override
   void initState() {
     super.initState();
-    couponController = TextEditingController();
   }
 
   void updateQuantity(String idProduct, int quantity, bool isIncrease) {

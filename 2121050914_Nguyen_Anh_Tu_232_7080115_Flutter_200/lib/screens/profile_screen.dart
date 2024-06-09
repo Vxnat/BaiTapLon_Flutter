@@ -14,6 +14,45 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   final usersCollection = FirebaseFirestore.instance.collection('users');
+
+  Future<dynamic> showLogoutMessage() {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          title: const Text(
+            'Log out',
+            style: TextStyle(color: Colors.redAccent),
+          ),
+          content: const Text('Are you sure you want to logout?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: const Text(
+                'Cancel',
+                style: TextStyle(color: Colors.grey),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                logout();
+              },
+              child: const Text(
+                'Logout',
+                style:
+                    TextStyle(fontWeight: FontWeight.bold, color: Colors.red),
+              ),
+            )
+          ],
+        );
+      },
+    );
+  }
+
   Future<void> editField(String field) async {
     String newValue = '';
     await showDialog(
@@ -97,10 +136,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
           centerTitle: true,
           actions: [
             IconButton(
-                onPressed: logout,
+                onPressed: showLogoutMessage,
                 icon: const Icon(
                   Icons.output,
-                  color: Colors.white,
+                  color: Colors.redAccent,
                 ))
           ],
         ),

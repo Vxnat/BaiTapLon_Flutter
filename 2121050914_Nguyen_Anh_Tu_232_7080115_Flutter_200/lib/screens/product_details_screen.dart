@@ -1,5 +1,6 @@
 import 'package:add_to_cart_animation/add_to_cart_animation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_application_e_commerce_app/API/apis.dart';
 import 'package:flutter_application_e_commerce_app/extensions/extension_time.dart';
 import 'package:flutter_application_e_commerce_app/modules/cart.dart';
@@ -30,7 +31,25 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   void initState() {
     super.initState();
     item = widget.item;
-    quantityController = TextEditingController(text: '1');
+    quantityController = TextEditingController(
+        text: foodModel.currentQuantityProduct.toString());
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    foodModel.currentQuantityProduct = 1;
+    quantityController.dispose();
+  }
+
+  void updateQuantity(bool isMinus) {
+    foodModel.updateQuantityProduct(isMinus);
+    quantityController.text = foodModel.currentQuantityProduct.toString();
+  }
+
+  void updateQuantityByTextField(String value) {
+    foodModel.updateFavoriteProductByTextField(value);
+    quantityController.text = foodModel.currentQuantityProduct.toString();
   }
 
   void addToCartAnimationClick(GlobalKey widgetKey) async {
@@ -285,13 +304,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         ),
                         IconButton(
                           onPressed: () {
-                            if (int.parse(quantityController.text) != 1) {
-                              int newQuantity =
-                                  int.parse(quantityController.text);
-                              newQuantity--;
-                              quantityController.text = newQuantity.toString();
-                              setState(() {});
-                            }
+                            updateQuantity(true);
                           },
                           icon: const Icon(Icons.remove_circle_outline),
                           color: Colors.orange,
@@ -314,26 +327,13 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               contentPadding: EdgeInsets.only(bottom: 18),
                             ),
                             onChanged: (value) {
-                              if (int.parse(value) <= 0) {
-                                int newQuantity = 1;
-                                quantityController.text =
-                                    newQuantity.toString();
-                              } else {
-                                int newQuantity = int.parse(value);
-                                quantityController.text =
-                                    newQuantity.toString();
-                              }
-                              setState(() {});
+                              updateQuantityByTextField(value);
                             },
                           ),
                         ),
                         IconButton(
                           onPressed: () {
-                            int newQuantity =
-                                int.parse(quantityController.text);
-                            newQuantity++;
-                            quantityController.text = newQuantity.toString();
-                            setState(() {});
+                            updateQuantity(false);
                           },
                           icon: const Icon(Icons.add_circle_outline),
                           color: Colors.orange,
@@ -346,15 +346,19 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Column(
-                            children: [
-                              const Text('Total Price'),
-                              Text(
-                                '\$${(item.price * int.parse(quantityController.text)).toStringAsFixed(2)}',
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold),
-                              )
-                            ],
+                          Consumer<ProviderFood>(
+                            builder: (context, value, child) {
+                              return Column(
+                                children: [
+                                  const Text('Total Price'),
+                                  Text(
+                                    '\$${(item.price * foodModel.currentQuantityProduct).toStringAsFixed(2)}',
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold),
+                                  )
+                                ],
+                              );
+                            },
                           ),
                           ElevatedButton(
                               style: ElevatedButton.styleFrom(

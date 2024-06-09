@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_application_e_commerce_app/API/apis.dart';
 import 'package:flutter_application_e_commerce_app/components/side_bar_menu.dart';
 import 'package:flutter_application_e_commerce_app/extensions/extension_time.dart';
@@ -352,7 +353,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     const SliverGridDelegateWithFixedCrossAxisCount(
                                   crossAxisCount: 2, // Số lượng cột
                                   childAspectRatio:
-                                      3 / 3, // Tỉ lệ khung hình của mỗi item
+                                      3 / 3.3, // Tỉ lệ khung hình của mỗi item
                                   crossAxisSpacing: 20,
                                   mainAxisSpacing: 20,
                                 ),
@@ -407,101 +408,120 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   width: MediaQuery.of(context)
                                                       .size
                                                       .width,
-                                                  height: 130,
+                                                  height: MediaQuery.of(context)
+                                                          .size
+                                                          .height *
+                                                      0.15,
                                                   fit: BoxFit.fill,
                                                   errorBuilder: (context, error,
                                                       stackTrace) {
                                                     return Image.asset(
                                                       'img/error-svgrepo-com.png',
-                                                      width: 150,
-                                                      height: 150,
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                              .size
+                                                              .width,
+                                                      height:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .height *
+                                                              0.13,
                                                       fit: BoxFit.cover,
                                                     );
                                                   },
                                                 ),
                                               ),
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Padding(
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
                                                         vertical: 5,
                                                         horizontal: 10),
-                                                child: Text(
-                                                  item.nameBrand,
-                                                  style: const TextStyle(
-                                                      color: Colors.orange,
-                                                      fontSize: 13,
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                ),
-                                              ),
-                                              Container(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
+                                                    child: Text(
+                                                      item.nameBrand,
+                                                      style: const TextStyle(
+                                                          color: Colors.orange,
+                                                          fontSize: 13,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    ),
+                                                  ),
+                                                  Container(
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
                                                         vertical: 4,
                                                         horizontal: 10),
-                                                width: MediaQuery.of(context)
-                                                    .size
-                                                    .width,
-                                                child: Text(
-                                                  item.name,
-                                                  style: const TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 16),
-                                                  maxLines: 2,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                ),
-                                              ),
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                            .size
+                                                            .width,
+                                                    child: Text(
+                                                      item.name,
+                                                      style: const TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 16),
+                                                      maxLines: 2,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    ),
+                                                  ),
+                                                  Padding(
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
                                                         horizontal: 10),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    Row(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .center,
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
                                                       children: [
-                                                        Text(
-                                                          ExtensionTime
-                                                              .convertMinutesToTime(
-                                                                  item.cookingTime),
-                                                          style:
-                                                              const TextStyle(
+                                                        Row(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            Text(
+                                                              ExtensionTime
+                                                                  .convertMinutesToTime(
+                                                                      item.cookingTime),
+                                                              style: const TextStyle(
                                                                   color: Colors
                                                                       .grey,
                                                                   fontSize: 13),
+                                                            ),
+                                                            Container(
+                                                              margin:
+                                                                  const EdgeInsets
+                                                                      .only(
+                                                                      left: 5,
+                                                                      bottom:
+                                                                          2),
+                                                              child:
+                                                                  Image.asset(
+                                                                'img/fire-svgrepo-com.png',
+                                                                width: 15,
+                                                                height: 15,
+                                                              ),
+                                                            )
+                                                          ],
                                                         ),
-                                                        Container(
-                                                          margin:
-                                                              const EdgeInsets
-                                                                  .only(
-                                                                  left: 5,
-                                                                  bottom: 2),
-                                                          child: Image.asset(
-                                                            'img/fire-svgrepo-com.png',
-                                                            width: 15,
-                                                            height: 15,
-                                                          ),
-                                                        )
+                                                        Text(
+                                                            '\$${item.price.toString()}',
+                                                            style: const TextStyle(
+                                                                color: Colors
+                                                                    .orange,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                fontSize: 15)),
                                                       ],
                                                     ),
-                                                    Text(
-                                                        '\$${item.price.toString()}',
-                                                        style: const TextStyle(
-                                                            color:
-                                                                Colors.orange,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            fontSize: 15)),
-                                                  ],
-                                                ),
-                                              ),
+                                                  ),
+                                                ],
+                                              )
                                             ],
                                           ),
                                         ),

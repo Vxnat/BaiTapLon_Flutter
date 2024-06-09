@@ -15,8 +15,8 @@ class FavoriteProductScreen extends StatefulWidget {
 
 class _FavoriteProductScreenState extends State<FavoriteProductScreen> {
   @override
-  void initState() {
-    super.initState();
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -75,14 +75,14 @@ class _FavoriteProductScreenState extends State<FavoriteProductScreen> {
                                     margin: const EdgeInsets.only(
                                         top: 20, bottom: 10),
                                     child: const Text(
-                                      'No Information Was Found',
+                                      'No Favorite Foods Were Found',
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 16),
                                     ),
                                   ),
                                   const Text(
-                                    'Let\' Add Your New Favorite Food',
+                                    'Let\'s Add Your New Favorite Foods',
                                     style: TextStyle(color: Colors.grey),
                                     textAlign: TextAlign.center,
                                   )

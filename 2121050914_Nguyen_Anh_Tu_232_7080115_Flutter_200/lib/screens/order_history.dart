@@ -22,6 +22,11 @@ class _OrderHistoryState extends State<OrderHistory> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -79,13 +84,13 @@ class _OrderHistoryState extends State<OrderHistory> {
                               margin:
                                   const EdgeInsets.only(top: 20, bottom: 10),
                               child: const Text(
-                                'No Information Was Found',
+                                'No Orders Were Found',
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold, fontSize: 16),
                               ),
                             ),
                             const Text(
-                              'Let\'s shopping now',
+                              'Let\'s Buy Foods Now',
                               style: TextStyle(color: Colors.grey),
                               textAlign: TextAlign.center,
                             )

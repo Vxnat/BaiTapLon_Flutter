@@ -15,17 +15,13 @@ class AuthService {
     }
   }
 
-  Future<bool> isEmailTaken(String email) async {
+  Future<bool> checkIfEmailExists(String email) async {
     try {
-      // Truy vấn Firestore để kiểm tra xem email đã được sử dụng hay chưa
-      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-          .collection('users')
-          .where('id', isEqualTo: user.uid)
-          .get();
-
-      // Nếu có tài liệu trả về từ truy vấn, email đã tồn tại
-      return querySnapshot.docs.isNotEmpty;
+      // ignore: deprecated_member_use
+      List<String> signInMethods = await auth.fetchSignInMethodsForEmail(email);
+      return signInMethods.isNotEmpty;
     } catch (e) {
+      print("Error checking if email exists: $e");
       return false;
     }
   }

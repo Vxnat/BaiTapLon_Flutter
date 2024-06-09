@@ -13,6 +13,11 @@ class BestSaleProductScreen extends StatefulWidget {
 
 class _BestSaleProductScreenState extends State<BestSaleProductScreen> {
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -58,7 +63,7 @@ class _BestSaleProductScreenState extends State<BestSaleProductScreen> {
                               const SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 2, // Số lượng cột
                             childAspectRatio:
-                                3 / 3, // Tỉ lệ khung hình của mỗi item
+                                3 / 3.3, // Tỉ lệ khung hình của mỗi item
                             crossAxisSpacing: 20,
                             mainAxisSpacing: 20,
                           ),
@@ -103,14 +108,22 @@ class _BestSaleProductScreenState extends State<BestSaleProductScreen> {
                                           item.imgProduct,
                                           width:
                                               MediaQuery.of(context).size.width,
-                                          height: 130,
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.15,
                                           fit: BoxFit.fill,
                                           errorBuilder:
                                               (context, error, stackTrace) {
                                             return Image.asset(
                                               'img/error-svgrepo-com.png',
-                                              width: 150,
-                                              height: 150,
+                                              width: MediaQuery.of(context)
+                                                  .size
+                                                  .width,
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  0.15,
                                               fit: BoxFit.cover,
                                             );
                                           },

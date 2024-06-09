@@ -17,6 +17,30 @@ class ProviderFood extends ChangeNotifier {
     BannerSlider(
         id: '3', name: 'Fastfood', imgBanner: 'img/fastfood_banner.jpg')
   ];
+  int currentQuantityProduct = 1;
+  void updateQuantityProduct(bool isMinus) {
+    if (isMinus) {
+      if (currentQuantityProduct > 1) {
+        currentQuantityProduct--;
+      }
+    } else {
+      if (currentQuantityProduct < 100) {
+        currentQuantityProduct++;
+      }
+    }
+    notifyListeners();
+  }
+
+  void updateFavoriteProductByTextField(String value) {
+    if (value == '' || int.parse(value) <= 0) {
+      currentQuantityProduct = 1;
+    } else {
+      int.parse(value) > 100
+          ? currentQuantityProduct = 100
+          : currentQuantityProduct = int.parse(value);
+    }
+    notifyListeners();
+  }
 
   // Thêm sản phẩm vào Cart
   void addToCart(Product product, int quantity) {
