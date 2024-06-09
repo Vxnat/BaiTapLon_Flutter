@@ -63,130 +63,135 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: Colors.white,
         title: Column(
           children: [
-            Padding(
-              padding: EdgeInsets.all(0),
-              child: Row(
-                children: [
-                  if (FirebaseAuth.instance.currentUser == null)
-                    IconButton(
-                        onPressed: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => const AuthGate(),
-                          ));
-                        },
-                        icon: Icon(
-                          Icons.person,
-                          color: Colors.orange,
-                        )),
-                  if (FirebaseAuth.instance.currentUser == null)
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.03,
-                    ),
-                  Container(
-                    width: MediaQuery.of(context).size.width - 130,
-                    height: 45,
-                    decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 223, 223, 223),
-                        borderRadius: BorderRadius.circular(10)),
-                    child: TextField(
-                      controller: searchController,
-                      cursorColor: const Color.fromARGB(255, 77, 77, 77),
-                      decoration: InputDecoration(
-                        prefixIcon: Image.asset(
-                          'img/search-svgrepo-com.png',
-                          width: 10,
-                          height: 10,
-                        ),
-                        hintText: 'Find your food',
-                        hintStyle: const TextStyle(
-                            color: Color.fromARGB(255, 82, 82, 82),
-                            fontStyle: FontStyle.italic,
-                            fontSize: 15),
-                        border: InputBorder.none,
-                        contentPadding: const EdgeInsets.symmetric(
-                            vertical: 12.0, horizontal: 30.0),
+            Row(
+              children: [
+                if (FirebaseAuth.instance.currentUser == null)
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const AuthGate(),
+                      ));
+                    },
+                    child: const CircleAvatar(
+                      backgroundColor: Colors.white,
+                      backgroundImage: AssetImage(
+                        'img/logo.png',
                       ),
-                      maxLines: 1,
-                      onSubmitted: (newValue) {
-                        filterData(searchController.text, '', 'searchBar');
-                      },
+                      radius: 25,
                     ),
                   ),
-                  FirebaseAuth.instance.currentUser != null
-                      ? StreamBuilder(
-                          stream: APIs.getAllSeftCarts(),
-                          builder: (context, snapshot) {
-                            if (snapshot.hasData) {
-                              final data = snapshot.data?.docs;
-                              final list = data
-                                      ?.map((e) => Cart.fromJson(e.data()))
-                                      .toList() ??
-                                  [];
-                              return GestureDetector(
-                                onTap: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => const CartScreen(),
-                                  ));
-                                },
-                                child: Stack(children: [
-                                  Container(
-                                    margin: const EdgeInsets.only(left: 10),
-                                    child: Image.asset(
-                                      'img/shopping-basket-shopper-svgrepo-com.png',
-                                      width: 30,
-                                      height: 30,
-                                    ),
-                                  ),
-                                  list.isNotEmpty
-                                      ? Positioned(
-                                          right: 0,
-                                          top: 0,
-                                          child: Container(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 5, vertical: 2),
-                                            decoration: const BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              color: Colors.red,
-                                            ),
-                                            child: Text(
-                                              textAlign: TextAlign.center,
-                                              list.length.toString(),
-                                              style: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 10,
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                          ),
-                                        )
-                                      : Container()
-                                ]),
-                              );
-                            }
-                            return Container();
-                          },
-                        )
-                      : GestureDetector(
-                          onTap: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => const AuthGate(),
-                            ));
-                          },
-                          child: Stack(children: [
-                            Container(
-                              margin: const EdgeInsets.only(left: 10),
-                              child: Image.asset(
-                                'img/shopping-basket-shopper-svgrepo-com.png',
-                                width: 30,
-                                height: 30,
-                              ),
-                            ),
-                          ]),
-                        )
-                ],
-              ),
+                if (FirebaseAuth.instance.currentUser == null)
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.02,
+                  ),
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.69,
+                  height: 45,
+                  decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 223, 223, 223),
+                      borderRadius: BorderRadius.circular(10)),
+                  child: TextField(
+                    controller: searchController,
+                    cursorColor: const Color.fromARGB(255, 77, 77, 77),
+                    decoration: InputDecoration(
+                      prefixIcon: Image.asset(
+                        'img/search-svgrepo-com.png',
+                        width: 10,
+                        height: 10,
+                      ),
+                      hintText: 'Find your food',
+                      hintStyle: const TextStyle(
+                          color: Color.fromARGB(255, 82, 82, 82),
+                          fontStyle: FontStyle.italic,
+                          fontSize: 15),
+                      border: InputBorder.none,
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 12.0, horizontal: 30.0),
+                    ),
+                    maxLines: 1,
+                    onSubmitted: (newValue) {
+                      filterData(searchController.text, '', 'searchBar');
+                    },
+                  ),
+                ),
+              ],
             ),
           ],
         ),
+        actions: [
+          FirebaseAuth.instance.currentUser != null
+              ? StreamBuilder(
+                  stream: APIs.getAllSeftCarts(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      final data = snapshot.data?.docs;
+                      final list =
+                          data?.map((e) => Cart.fromJson(e.data())).toList() ??
+                              [];
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => const CartScreen(),
+                          ));
+                        },
+                        child: Stack(children: [
+                          Container(
+                            margin: const EdgeInsets.only(left: 10),
+                            child: Image.asset(
+                              'img/shopping-basket-shopper-svgrepo-com.png',
+                              width: 30,
+                              height: 30,
+                            ),
+                          ),
+                          list.isNotEmpty
+                              ? Positioned(
+                                  right: 0,
+                                  top: 0,
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 5, vertical: 2),
+                                    decoration: const BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.red,
+                                    ),
+                                    child: Text(
+                                      textAlign: TextAlign.center,
+                                      list.length.toString(),
+                                      style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                )
+                              : Container()
+                        ]),
+                      );
+                    }
+                    return Container();
+                  },
+                )
+              : GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const AuthGate(),
+                    ));
+                  },
+                  child: Stack(children: [
+                    Container(
+                      margin: const EdgeInsets.only(left: 10),
+                      child: Image.asset(
+                        'img/shopping-basket-shopper-svgrepo-com.png',
+                        width: 30,
+                        height: 30,
+                      ),
+                    ),
+                  ]),
+                ),
+          const SizedBox(
+            width: 20,
+          )
+        ],
         centerTitle: true,
       ),
       drawer: FirebaseAuth.instance.currentUser != null

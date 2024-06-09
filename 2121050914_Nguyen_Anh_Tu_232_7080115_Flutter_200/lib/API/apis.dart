@@ -3,13 +3,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_application_e_commerce_app/modules/cart.dart';
 import 'package:flutter_application_e_commerce_app/modules/order.dart';
 import 'package:flutter_application_e_commerce_app/modules/product.dart';
-import 'package:flutter_application_e_commerce_app/modules/user_food.dart';
 
 class APIs {
   static FirebaseAuth auth = FirebaseAuth.instance;
   static FirebaseFirestore firestore = FirebaseFirestore.instance;
   static User get user => auth.currentUser!;
-  // static late UserFood me;
 
   // Dữ liệu cho profile_screen
   static Stream<QuerySnapshot<Map<String, dynamic>>> getUser() {
@@ -87,19 +85,6 @@ class APIs {
       rethrow;
     }
   }
-
-  // Dữ liệu người dùng
-  // static Future<void> getSelfInfor() async {
-  //   return await firestore
-  //       .collection('users')
-  //       .doc(user.uid)
-  //       .get()
-  //       .then((user) async {
-  //     if (user.exists) {
-  //       me = UserFood.fromJson(user.data()!);
-  //     }
-  //   });
-  // }
 
   // Cập nhật sản phẩm yêu thích của người dùng
   static Future<void> updateFavoriteProduct(Product product) async {

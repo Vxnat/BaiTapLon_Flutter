@@ -70,6 +70,7 @@ flutter:
         - assets/img/background_gate.jpg
         - assets/img/background_home.jpg
         - assets/img/user_img.png
+        - assets/img/user_login.png
         - assets/img/logo_2.png
         - assets/img/banner.jpg
         - assets/img/coupon-svgrepo-com.png
