@@ -9,7 +9,7 @@ class APIs {
   static FirebaseAuth auth = FirebaseAuth.instance;
   static FirebaseFirestore firestore = FirebaseFirestore.instance;
   static User get user => auth.currentUser!;
-  static late UserFood me;
+  // static late UserFood me;
 
   // Dữ liệu cho profile_screen
   static Stream<QuerySnapshot<Map<String, dynamic>>> getUser() {
@@ -89,17 +89,17 @@ class APIs {
   }
 
   // Dữ liệu người dùng
-  static Future<void> getSelfInfor() async {
-    return await firestore
-        .collection('users')
-        .doc(user.uid)
-        .get()
-        .then((user) async {
-      if (user.exists) {
-        me = UserFood.fromJson(user.data()!);
-      }
-    });
-  }
+  // static Future<void> getSelfInfor() async {
+  //   return await firestore
+  //       .collection('users')
+  //       .doc(user.uid)
+  //       .get()
+  //       .then((user) async {
+  //     if (user.exists) {
+  //       me = UserFood.fromJson(user.data()!);
+  //     }
+  //   });
+  // }
 
   // Cập nhật sản phẩm yêu thích của người dùng
   static Future<void> updateFavoriteProduct(Product product) async {

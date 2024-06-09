@@ -99,7 +99,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
 
     if (newValue.trim().isNotEmpty) {
-      await usersCollection.doc(APIs.me.id).update({field: newValue});
+      await usersCollection.doc(APIs.user.uid).update({field: newValue});
     }
   }
 

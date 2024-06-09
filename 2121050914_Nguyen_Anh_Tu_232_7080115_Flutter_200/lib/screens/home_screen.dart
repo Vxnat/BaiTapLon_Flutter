@@ -1,7 +1,9 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_application_e_commerce_app/API/apis.dart';
+import 'package:flutter_application_e_commerce_app/auth/auth_gate.dart';
 import 'package:flutter_application_e_commerce_app/components/side_bar_menu.dart';
 import 'package:flutter_application_e_commerce_app/extensions/extension_time.dart';
 import 'package:flutter_application_e_commerce_app/modules/cart.dart';
@@ -27,14 +29,13 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    APIs.getSelfInfor();
     searchController = TextEditingController();
   }
 
   @override
   void dispose() {
-    searchController.dispose();
     super.dispose();
+    searchController.dispose();
   }
 
   void filterData(String nameProduct, String idCategory, String kindOfSearch) {
@@ -63,9 +64,24 @@ class _HomeScreenState extends State<HomeScreen> {
         title: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.all(0),
+              padding: EdgeInsets.all(0),
               child: Row(
                 children: [
+                  if (FirebaseAuth.instance.currentUser == null)
+                    IconButton(
+                        onPressed: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => const AuthGate(),
+                          ));
+                        },
+                        icon: Icon(
+                          Icons.person,
+                          color: Colors.orange,
+                        )),
+                  if (FirebaseAuth.instance.currentUser == null)
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.03,
+                    ),
                   Container(
                     width: MediaQuery.of(context).size.width - 130,
                     height: 45,
@@ -96,19 +112,63 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                     ),
                   ),
-                  StreamBuilder(
-                    stream: APIs.getAllSeftCarts(),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        final data = snapshot.data?.docs;
-                        final list = data
-                                ?.map((e) => Cart.fromJson(e.data()))
-                                .toList() ??
-                            [];
-                        return GestureDetector(
+                  FirebaseAuth.instance.currentUser != null
+                      ? StreamBuilder(
+                          stream: APIs.getAllSeftCarts(),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              final data = snapshot.data?.docs;
+                              final list = data
+                                      ?.map((e) => Cart.fromJson(e.data()))
+                                      .toList() ??
+                                  [];
+                              return GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => const CartScreen(),
+                                  ));
+                                },
+                                child: Stack(children: [
+                                  Container(
+                                    margin: const EdgeInsets.only(left: 10),
+                                    child: Image.asset(
+                                      'img/shopping-basket-shopper-svgrepo-com.png',
+                                      width: 30,
+                                      height: 30,
+                                    ),
+                                  ),
+                                  list.isNotEmpty
+                                      ? Positioned(
+                                          right: 0,
+                                          top: 0,
+                                          child: Container(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 5, vertical: 2),
+                                            decoration: const BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              color: Colors.red,
+                                            ),
+                                            child: Text(
+                                              textAlign: TextAlign.center,
+                                              list.length.toString(),
+                                              style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 10,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ),
+                                        )
+                                      : Container()
+                                ]),
+                              );
+                            }
+                            return Container();
+                          },
+                        )
+                      : GestureDetector(
                           onTap: () {
                             Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => const CartScreen(),
+                              builder: (context) => const AuthGate(),
                             ));
                           },
                           child: Stack(children: [
@@ -120,34 +180,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 height: 30,
                               ),
                             ),
-                            list.isNotEmpty
-                                ? Positioned(
-                                    right: 0,
-                                    top: 0,
-                                    child: Container(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 5, vertical: 2),
-                                      decoration: const BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: Colors.red,
-                                      ),
-                                      child: Text(
-                                        textAlign: TextAlign.center,
-                                        list.length.toString(),
-                                        style: const TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 10,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ),
-                                  )
-                                : Container()
                           ]),
-                        );
-                      }
-                      return Container();
-                    },
-                  )
+                        )
                 ],
               ),
             ),
@@ -155,7 +189,9 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         centerTitle: true,
       ),
-      drawer: const SideBarMenu(),
+      drawer: FirebaseAuth.instance.currentUser != null
+          ? const SideBarMenu()
+          : null,
       body: SingleChildScrollView(
         child: Container(
           decoration:

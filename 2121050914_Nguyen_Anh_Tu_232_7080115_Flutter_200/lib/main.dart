@@ -1,7 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_e_commerce_app/auth/auth_gate.dart';
 import 'package:flutter_application_e_commerce_app/provider/provider_food.dart';
+import 'package:flutter_application_e_commerce_app/screens/home_screen.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -15,7 +15,7 @@ void main() async {
   runApp(ChangeNotifierProvider(
       create: (context) => ProviderFood(),
       child: const MaterialApp(
-        home: AuthGate(),
+        home: HomeScreen(),
         debugShowCheckedModeBanner: false,
       )));
 }

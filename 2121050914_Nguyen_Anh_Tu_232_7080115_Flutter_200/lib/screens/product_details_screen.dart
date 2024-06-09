@@ -1,7 +1,8 @@
 import 'package:add_to_cart_animation/add_to_cart_animation.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_application_e_commerce_app/API/apis.dart';
+import 'package:flutter_application_e_commerce_app/auth/auth_gate.dart';
 import 'package:flutter_application_e_commerce_app/extensions/extension_time.dart';
 import 'package:flutter_application_e_commerce_app/modules/cart.dart';
 import 'package:flutter_application_e_commerce_app/modules/product.dart';
@@ -20,7 +21,7 @@ class ProductDetailsScreen extends StatefulWidget {
 class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   late final Product item;
   late TextEditingController quantityController;
-  late bool isFavorite;
+  bool isFavorite = false;
   final foodModel = ProviderFood();
   // Đánh dấu vị trí của giỏ hàng bằng Global Key
   GlobalKey<CartIconKey> cartKey = GlobalKey<CartIconKey>();
@@ -107,122 +108,176 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   top: 15,
                   right: 15,
                   child: AddToCartIcon(
-                    badgeOptions: const BadgeOptions(active: false),
-                    key: cartKey,
-                    // Carts
-                    icon: StreamBuilder(
-                      stream: APIs.getAllSeftCarts(),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          final data = snapshot.data?.docs;
-                          final list = data
-                                  ?.map((e) => Cart.fromJson(e.data()))
-                                  .toList() ??
-                              [];
-                          return GestureDetector(
-                            onTap: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => const CartScreen(),
-                              ));
-                            },
-                            child: Stack(children: [
-                              Container(
-                                margin: const EdgeInsets.only(left: 15),
-                                child: Image.asset(
-                                  'img/shopping-basket-shopper-svgrepo-com.png',
-                                  width: 30,
-                                  height: 30,
-                                ),
-                              ),
-                              list.isNotEmpty
-                                  ? Positioned(
-                                      right: 0,
-                                      top: 0,
-                                      child: Container(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 5, vertical: 2),
-                                        decoration: const BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: Colors.red,
-                                        ),
-                                        child: Text(
-                                          textAlign: TextAlign.center,
-                                          list.length.toString(),
-                                          style: const TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 10,
-                                              fontWeight: FontWeight.bold),
+                      badgeOptions: const BadgeOptions(active: false),
+                      key: cartKey,
+                      // Carts
+                      icon: FirebaseAuth.instance.currentUser != null
+                          ? StreamBuilder(
+                              stream: APIs.getAllSeftCarts(),
+                              builder: (context, snapshot) {
+                                if (snapshot.hasData) {
+                                  final data = snapshot.data?.docs;
+                                  final list = data
+                                          ?.map((e) => Cart.fromJson(e.data()))
+                                          .toList() ??
+                                      [];
+                                  return GestureDetector(
+                                    onTap: () {
+                                      Navigator.of(context)
+                                          .push(MaterialPageRoute(
+                                        builder: (context) =>
+                                            const CartScreen(),
+                                      ));
+                                    },
+                                    child: Stack(children: [
+                                      Container(
+                                        margin: const EdgeInsets.only(left: 15),
+                                        child: Image.asset(
+                                          'img/shopping-basket-shopper-svgrepo-com.png',
+                                          width: 30,
+                                          height: 30,
                                         ),
                                       ),
-                                    )
-                                  : Container()
-                            ]),
-                          );
-                        }
-                        return Container();
-                      },
-                    ),
-                  ),
+                                      list.isNotEmpty
+                                          ? Positioned(
+                                              right: 0,
+                                              top: 0,
+                                              child: Container(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 5,
+                                                        vertical: 2),
+                                                decoration: const BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  color: Colors.red,
+                                                ),
+                                                child: Text(
+                                                  textAlign: TextAlign.center,
+                                                  list.length.toString(),
+                                                  style: const TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 10,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                              ),
+                                            )
+                                          : Container()
+                                    ]),
+                                  );
+                                }
+                                return Container();
+                              },
+                            )
+                          : GestureDetector(
+                              onTap: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => const AuthGate(),
+                                ));
+                              },
+                              child: Stack(children: [
+                                Container(
+                                  margin: const EdgeInsets.only(left: 10),
+                                  child: Image.asset(
+                                    'img/shopping-basket-shopper-svgrepo-com.png',
+                                    width: 30,
+                                    height: 30,
+                                  ),
+                                ),
+                              ]),
+                            )),
                 ),
               ]),
               // Favorite
-              StreamBuilder(
-                stream: APIs.getFavorite(widget.item.id),
-                builder: (context, snapshot) {
-                  switch (snapshot.connectionState) {
-                    case ConnectionState.none:
-                    case ConnectionState.waiting:
-                      return Container(
-                          alignment: Alignment.centerRight,
-                          child: IconButton(
-                            onPressed: () {},
-                            icon: const Icon(
-                              Icons.favorite_border,
-                              color: Colors.red,
-                            ),
-                          ));
-                    case ConnectionState.done:
-                    case ConnectionState.active:
-                      if (snapshot.hasData) {
-                        final data = snapshot.data?.docs;
-                        final list = data
-                                ?.map((e) => Product.fromJson(e.data()))
-                                .toList() ??
-                            [];
-                        list.isNotEmpty
-                            ? isFavorite = true
-                            : isFavorite = false;
-                      }
-                      return Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          // Hình ảnh muốn tạo Animation
-                          Container(
-                            key: widgetKey,
-                            width: 70,
-                            height: 70,
-                            margin: const EdgeInsets.only(left: 15),
-                            child: Image.asset(
-                              item.imgProduct,
-                              width: MediaQuery.of(context).size.width,
-                              fit: BoxFit.fitWidth,
-                            ),
+              FirebaseAuth.instance.currentUser != null
+                  ? StreamBuilder(
+                      stream: APIs.getFavorite(widget.item.id),
+                      builder: (context, snapshot) {
+                        switch (snapshot.connectionState) {
+                          case ConnectionState.none:
+                          case ConnectionState.waiting:
+                            return Container(
+                                alignment: Alignment.centerRight,
+                                child: IconButton(
+                                  onPressed: () {},
+                                  icon: const Icon(
+                                    Icons.favorite_border,
+                                    color: Colors.red,
+                                  ),
+                                ));
+                          case ConnectionState.done:
+                          case ConnectionState.active:
+                            if (snapshot.hasData) {
+                              final data = snapshot.data?.docs;
+                              final list = data
+                                      ?.map((e) => Product.fromJson(e.data()))
+                                      .toList() ??
+                                  [];
+                              list.isNotEmpty
+                                  ? isFavorite = true
+                                  : isFavorite = false;
+                            }
+                            return Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                // Hình ảnh muốn tạo Animation
+                                Container(
+                                  key: widgetKey,
+                                  width: 70,
+                                  height: 70,
+                                  margin: const EdgeInsets.only(left: 15),
+                                  child: Image.asset(
+                                    item.imgProduct,
+                                    width: MediaQuery.of(context).size.width,
+                                    fit: BoxFit.fitWidth,
+                                  ),
+                                ),
+                                IconButton(
+                                    onPressed: () {
+                                      updateFavoriteProduct();
+                                    },
+                                    icon: Icon(
+                                      isFavorite
+                                          ? Icons.favorite
+                                          : Icons.favorite_border,
+                                      color: Colors.red,
+                                    )),
+                              ],
+                            );
+                        }
+                      },
+                    )
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        // Hình ảnh muốn tạo Animation
+                        Container(
+                          key: widgetKey,
+                          width: 70,
+                          height: 70,
+                          margin: const EdgeInsets.only(left: 15),
+                          child: Image.asset(
+                            item.imgProduct,
+                            width: MediaQuery.of(context).size.width,
+                            fit: BoxFit.fitWidth,
                           ),
-                          IconButton(
-                              onPressed: () {
-                                updateFavoriteProduct();
-                              },
-                              icon: Icon(
-                                isFavorite
-                                    ? Icons.favorite
-                                    : Icons.favorite_border,
-                                color: Colors.red,
-                              )),
-                        ],
-                      );
-                  }
-                },
-              ),
+                        ),
+                        IconButton(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const AuthGate(),
+                                  ));
+                            },
+                            icon: Icon(
+                              isFavorite
+                                  ? Icons.favorite
+                                  : Icons.favorite_border,
+                              color: Colors.red,
+                            )),
+                      ],
+                    ),
               Container(
                 padding: const EdgeInsets.only(
                     top: 20, bottom: 15, left: 15, right: 15),
@@ -367,10 +422,15 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(10))),
                               onPressed: () {
-                                addToCart(
-                                    item,
-                                    int.parse(quantityController.text),
-                                    widgetKey);
+                                FirebaseAuth.instance.currentUser != null
+                                    ? addToCart(
+                                        item,
+                                        int.parse(quantityController.text),
+                                        widgetKey)
+                                    : Navigator.of(context)
+                                        .push(MaterialPageRoute(
+                                        builder: (context) => const AuthGate(),
+                                      ));
                               },
                               child: const Row(
                                 children: [
