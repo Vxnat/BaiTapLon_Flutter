@@ -85,7 +85,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     width: MediaQuery.of(context).size.width * 0.02,
                   ),
                 Container(
-                  width: MediaQuery.of(context).size.width * 0.69,
+                  width: MediaQuery.of(context).size.width * 0.7,
                   height: 45,
                   decoration: BoxDecoration(
                       color: const Color.fromARGB(255, 223, 223, 223),
@@ -114,24 +114,66 @@ class _HomeScreenState extends State<HomeScreen> {
                     },
                   ),
                 ),
-              ],
-            ),
-          ],
-        ),
-        actions: [
-          FirebaseAuth.instance.currentUser != null
-              ? StreamBuilder(
-                  stream: APIs.getAllSeftCarts(),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      final data = snapshot.data?.docs;
-                      final list =
-                          data?.map((e) => Cart.fromJson(e.data())).toList() ??
-                              [];
-                      return GestureDetector(
+                const SizedBox(
+                  width: 10,
+                ),
+                FirebaseAuth.instance.currentUser != null
+                    ? StreamBuilder(
+                        stream: APIs.getAllSeftCarts(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            final data = snapshot.data?.docs;
+                            final list = data
+                                    ?.map((e) => Cart.fromJson(e.data()))
+                                    .toList() ??
+                                [];
+                            return GestureDetector(
+                              onTap: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => const CartScreen(),
+                                ));
+                              },
+                              child: Stack(children: [
+                                Container(
+                                  margin: const EdgeInsets.only(left: 10),
+                                  child: Image.asset(
+                                    'img/shopping-basket-shopper-svgrepo-com.png',
+                                    width: 30,
+                                    height: 30,
+                                  ),
+                                ),
+                                list.isNotEmpty
+                                    ? Positioned(
+                                        right: 0,
+                                        top: 0,
+                                        child: Container(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 5, vertical: 2),
+                                          decoration: const BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: Colors.red,
+                                          ),
+                                          child: Text(
+                                            textAlign: TextAlign.center,
+                                            list.length.toString(),
+                                            style: const TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 10,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                      )
+                                    : Container()
+                              ]),
+                            );
+                          }
+                          return Container();
+                        },
+                      )
+                    : GestureDetector(
                         onTap: () {
                           Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => const CartScreen(),
+                            builder: (context) => const AuthGate(),
                           ));
                         },
                         child: Stack(children: [
@@ -143,55 +185,12 @@ class _HomeScreenState extends State<HomeScreen> {
                               height: 30,
                             ),
                           ),
-                          list.isNotEmpty
-                              ? Positioned(
-                                  right: 0,
-                                  top: 0,
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 5, vertical: 2),
-                                    decoration: const BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: Colors.red,
-                                    ),
-                                    child: Text(
-                                      textAlign: TextAlign.center,
-                                      list.length.toString(),
-                                      style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 10,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                )
-                              : Container()
                         ]),
-                      );
-                    }
-                    return Container();
-                  },
-                )
-              : GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const AuthGate(),
-                    ));
-                  },
-                  child: Stack(children: [
-                    Container(
-                      margin: const EdgeInsets.only(left: 10),
-                      child: Image.asset(
-                        'img/shopping-basket-shopper-svgrepo-com.png',
-                        width: 30,
-                        height: 30,
                       ),
-                    ),
-                  ]),
-                ),
-          const SizedBox(
-            width: 20,
-          )
-        ],
+              ],
+            ),
+          ],
+        ),
         centerTitle: true,
       ),
       drawer: FirebaseAuth.instance.currentUser != null
@@ -394,7 +393,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     const SliverGridDelegateWithFixedCrossAxisCount(
                                   crossAxisCount: 2, // Số lượng cột
                                   childAspectRatio:
-                                      3 / 3.3, // Tỉ lệ khung hình của mỗi item
+                                      3 / 3, // Tỉ lệ khung hình của mỗi item
                                   crossAxisSpacing: 20,
                                   mainAxisSpacing: 20,
                                 ),

@@ -156,7 +156,7 @@ class _FilteredScreenState extends State<FilteredScreen> {
                                   const SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: 2, // Số lượng cột
                                 childAspectRatio:
-                                    3 / 3.3, // Tỉ lệ khung hình của mỗi item
+                                    3 / 3, // Tỉ lệ khung hình của mỗi item
                                 crossAxisSpacing: 20,
                                 mainAxisSpacing: 20,
                               ),
@@ -327,7 +327,7 @@ class _FilteredScreenState extends State<FilteredScreen> {
                                   const SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: 2, // Số lượng cột
                                 childAspectRatio:
-                                    3 / 3.3, // Tỉ lệ khung hình của mỗi item
+                                    3 / 3, // Tỉ lệ khung hình của mỗi item
                                 crossAxisSpacing: 20,
                                 mainAxisSpacing: 20,
                               ),

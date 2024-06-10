@@ -135,7 +135,7 @@ class _CartScreenState extends State<CartScreen> {
               Padding(
                 padding: const EdgeInsets.only(bottom: 15),
                 child: Container(
-                    height: mq.height * 0.69,
+                    height: mq.height * 0.8,
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(10),
@@ -253,7 +253,10 @@ class _CartScreenState extends State<CartScreen> {
                                                 child: Image.asset(
                                                   item.product.imgProduct,
                                                   fit: BoxFit.fill,
-                                                  width: 150,
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.2,
                                                 ),
                                               ),
                                               Column(
@@ -438,7 +441,7 @@ class _CartScreenState extends State<CartScreen> {
                     )),
               ),
               Container(
-                  height: mq.height * 0.23,
+                  height: mq.height * 0.28,
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
                     color: Colors.white,
